@@ -13,8 +13,29 @@ data_df = load_data()
 
 
 # Sidebar
-option = st.sidebar.radio("Select Analysis Type:", ["Rata rata per tahun tingkat polusi kota Guanyuan selama 5 tahun (2013-2017)", "Perubahan suhu dan tekanan udara kota Guanyuan selama 5 tahun"])
+selected_analysis_type = st.sidebar.selectbox('Select Analysis Type:', ['Mean over 5 Years', 'Individual Year'])
 
+if selected_analysis_type == 'Individual Year':
+    # Menambahkan selectbox untuk opsi waktu tahun (2013-2017)
+    selected_year = st.sidebar.selectbox('Select Year', average_pollution_by_year['year'].unique())
+
+    # Filter data untuk waktu tahun yg dipilih
+    selected_year_data = df[df['year'] == selected_year]
+
+    # Menampilkan dataset
+    st.subheader(f'Sample of the dataset for {selected_year}:')
+    st.write(selected_year_data.head())
+
+    # Menampilkan rata-rata polusi udara pada tahun yang dipilih
+    st.subheader(f'Average Pollution Levels for {selected_year}')
+    fig, ax = plt.subplots(figsize=(12, 8))
+    for pollutant in ["PM2.5", "PM10", "SO2", "NO2", "CO", "O3"]:
+        sns.lineplot(x='month', y=pollutant, data=selected_year_data, label=pollutant, marker='o')
+    plt.title(f'Average Pollution Levels for {selected_year}')
+    plt.xlabel('Month')
+    plt.ylabel('Average Pollution Level')
+    plt.legend(title='Pollutant')
+    st.pyplot(fig)
 
 # JUDUL STREAMLIT
 st.title("Guanyuan Air Quality")
@@ -116,22 +137,21 @@ if option == "Rata rata per tahun tingkat polusi kota Guanyuan selama 5 tahun (2
 else:
   st.subheader("Trend Perubahan Suhu dan Tekanan Udara di Aotizhongxin")
   mean_air_over_5_years = data_df.groupby('year').agg({
-        'TEMP': 'mean',
-        'PRES': 'mean'
-    }).reset_index()
+      'TEMP': 'mean',
+      'PRES': 'mean'}).reset_index()
     
   fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(20, 10))
   ax[0].plot(mean_air_over_5_years['year'], mean_air_over_5_years['TEMP'], marker='o', linewidth=2, color="#39064B")
   ax[0].tick_params(axis='y', labelsize=20)
   ax[0].tick_params(axis='x', labelsize=20, labelrotation = 45)
-  ax[0].set_ylabel("Suhu (°C)", fontsize=25)
-  ax[0].set_title("Suhu", loc="center", fontsize=35)
+  ax[0].set_ylabel("Temperature (°C)", fontsize=25)
+  ax[0].set_title("Mean Temperature", loc="center", fontsize=35)
   
-  ax[1].plot(mean_air_over_5_years['time'], mean_air_over_5_years['PRES'], marker='o', linewidth=2, color="#39064B")
+  ax[1].plot(mean_air_over_5_years['year'], mean_air_over_5_years['PRES'], marker='o', linewidth=2, color="#39064B")
   ax[1].tick_params(axis='y', labelsize=20)
   ax[1].tick_params(axis='x', labelsize=20, labelrotation = 45)
-  ax[1].set_ylabel("Tekanan (hPa)", fontsize=25)
-  ax[1].set_title("Tekanan", loc="center", fontsize=35)
+  ax[1].set_ylabel("Pressure (hPa)", fontsize=25)
+  ax[1].set_title("Mean Pressure", loc="center", fontsize=35)
   
   fig = plt.gcf()
   st.pyplot(fig)
