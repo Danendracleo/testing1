@@ -13,29 +13,8 @@ data_df = load_data()
 
 
 # Sidebar
-selected_analysis_type = st.sidebar.selectbox('Select Analysis Type:', ['Mean over 5 Years', 'Individual Year'])
+selected_analysis_type = st.sidebar.radio('Select Analysis Type:', ['Mean over 5 Years', 'Individual Year'])
 
-if selected_analysis_type == 'Individual Year':
-    # Menambahkan selectbox untuk opsi waktu tahun (2013-2017)
-    selected_year = st.sidebar.selectbox('Select Year', average_pollution_by_year['year'].unique())
-
-    # Filter data untuk waktu tahun yg dipilih
-    selected_year_data = df[df['year'] == selected_year]
-
-    # Menampilkan dataset
-    st.subheader(f'Sample of the dataset for {selected_year}:')
-    st.write(selected_year_data.head())
-
-    # Menampilkan rata-rata polusi udara pada tahun yang dipilih
-    st.subheader(f'Average Pollution Levels for {selected_year}')
-    fig, ax = plt.subplots(figsize=(12, 8))
-    for pollutant in ["PM2.5", "PM10", "SO2", "NO2", "CO", "O3"]:
-        sns.lineplot(x='month', y=pollutant, data=selected_year_data, label=pollutant, marker='o')
-    plt.title(f'Average Pollution Levels for {selected_year}')
-    plt.xlabel('Month')
-    plt.ylabel('Average Pollution Level')
-    plt.legend(title='Pollutant')
-    st.pyplot(fig)
 
 # JUDUL STREAMLIT
 st.title("Guanyuan Air Quality")
