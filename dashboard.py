@@ -1,4 +1,4 @@
-import streamlit as st
+mport streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -13,7 +13,7 @@ data_df = load_data()
 
 
 # Sidebar
-selected_analysis_type = st.sidebar.radio('Select Analysis Type:', ['Mean over 5 Years', 'Individual Year'])
+option = st.sidebar.radio("Select Analysis Type:", ["Rata rata per tahun tingkat polusi kota Guanyuan selama 5 tahun (2013-2017)", "Perubahan suhu dan tekanan udara kota Guanyuan selama 5 tahun"])
 
 
 # JUDUL STREAMLIT
